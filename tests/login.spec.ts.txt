@@ -1,0 +1,25 @@
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+
+test.describe('Login Flow - Playwright', () => {
+
+  test('Successful login', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+
+    await loginPage.navigate();
+    await loginPage.login('student', 'Password123');
+
+    const message = await loginPage.getSuccessMessage();
+    expect(message).toContain('Logged In Successfully');
+  });
+
+  test('Invalid login', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+
+    await loginPage.navigate();
+    await loginPage.login('invalid', 'invalid');
+
+    await expect(page.locator('body')).toContainText('Your username is invalid!');
+  });
+
+});
